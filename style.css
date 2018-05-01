@@ -1,0 +1,30 @@
+.drop_zone {
+    border: 2px dashed #bbb;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 25px;
+    text-align: center;
+    color: #bbb;
+}
+
+.drop_zone.nodes.filled {
+	background-color: #FF6347;
+}
+
+.drop_zone.edges.filled {
+	background-color: #34495E;
+}
+
+.drop_zone.filled {
+	border: none;
+	color: white;
+}
+
+#force-layout {
+	background-color: #F4F6F6;
+	width: 100%;
+	height: calc(100vh - 250px);
+	border-radius: 3px;
+}
+

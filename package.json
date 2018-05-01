@@ -1,0 +1,25 @@
+{
+  "name": "wonrket",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iosonosempreio/wonrket.git"
+  },
+  "author": "iosonosempreio",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/iosonosempreio/wonrket/issues"
+  },
+  "homepage": "https://github.com/iosonosempreio/wonrket#readme",
+  "dependencies": {
+    "bootstrap": "^4.1.0",
+    "d3": "^5.1.0",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3"
+  }
+}

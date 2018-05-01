@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <h1>Wonrket</h1>
+                        <h4>Explorer for force-layouts</h4>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="drop_zone nodes">Drop nodes table here</div>
+                        
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="drop_zone edges">Drop edges table here</div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <svg id="force-layout"></svg>
+              </div>
+            </div>
+        </div>
+
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="/node_modules/jquery/dist/jquery.slim.min.js"></script>
+        <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
+        <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="/node_modules/d3/dist/d3.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+
+</html>
