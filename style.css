@@ -13,7 +13,7 @@
 }
 
 .drop_zone.edges.filled {
-	background-color: #34495E;
+	background-color: #5D6D7E;
 }
 
 .drop_zone.filled {
@@ -28,3 +28,19 @@
 	border-radius: 3px;
 }
 
+.decay {
+	position: absolute;
+	display: block;
+	width: calc(100% - 30px);
+	height: 5px;
+	border-radius: 3px 3px 0 0;
+	top: 0;
+	overflow: hidden;
+}
+
+.decay-bar {
+	background-color: #58D68D;
+	width: 100%;
+	height: 100%;
+	display: block;
+}

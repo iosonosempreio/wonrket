@@ -1,6 +1,14 @@
 let table, target;
 
-let nodes = [], links = [];
+let nodes = [],
+    links = [],
+    previousLinks;
+
+let forceConfig = {
+    manyBody: {
+        strength: -30
+    }
+}
 
 function handleFileSelect(evt) {
     target = evt.target;
@@ -59,21 +67,49 @@ function loaded(evt) {
     if (table == 'nodes') {
         nodes = fileString;
         d3.select(target)
+            .html('')
             .classed('filled', true)
-            .html(`Selected ${nodes.length} nodes`);
+            .html(`
+              <span>Selected ${nodes.length} nodes</span>
+              <span class="clear nodes"><i class="fas fa-trash-alt"></i></span>
+              `);
+        d3.select('.clear.nodes')
+            .on('click', function() {
+                d3.select('.drop_zone.nodes')
+                    .classed('filled', false)
+                    .html('Drop nodes table here');
+                nodes = [];
+
+                // Also clear links
+                d3.select('.drop_zone.edges')
+                    .classed('filled', false)
+                    .html('Drop edges table here');
+                links = [];
+                restart();
+            })
     } else if (table == 'edges') {
         links = fileString;
         d3.select(target)
+            .html('')
             .classed('filled', true)
-            .html(`Selected ${links.length} edges`);
+            .html(`
+              <span>Selected ${links.length} edges</span>
+              <span class="clear edges"><i class="fas fa-trash-alt"></i></span>
+              `);
+        d3.select('.clear.edges')
+            .on('click', function() {
+                d3.select('.drop_zone.edges')
+                    .classed('filled', false)
+                    .html('Drop edges table here');
+                links = [];
+                restart();
+            })
     }
 
     // console.log(fileString);
 
-    // console.log(nodes, links)
-
     if (nodes.length > 0) {
-      restart();
+        restart();
     }
 
 }
@@ -100,53 +136,152 @@ d3.selectAll('.drop_zone')
 // Force layout here
 
 let svg = d3.select("#force-layout");
-let width = svg.node().getBoundingClientRect().width;
-let height = svg.node().getBoundingClientRect().height
+let width = svg.node()
+    .getBoundingClientRect()
+    .width;
+let height = svg.node()
+    .getBoundingClientRect()
+    .height
 
 let simulation = d3.forceSimulation(nodes)
-    .force("center", d3.forceCenter(0,0))
-    .force("link", d3.forceLink(links).id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody().strength(-30))
-    .force("x", d3.forceX(0))
-    .force("y", d3.forceY(0))
-    
-    .alphaTarget(1)
+    .force("center", d3.forceCenter(width/2, height/2))
+    .force("link", d3.forceLink(links)
+        .id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody()
+        .strength(forceConfig.manyBody.strength))
+    .force("x", d3.forceX(width/2))
+    .force("y", d3.forceY(height/2))
+    .alphaMin(0.05)
     .on("tick", ticked);
 
-let g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-    link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
-    node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+d3.select('.restart-force').on('click', function(d){
+  restart();
+})
 
-
+let g = svg.append("g")
+    // .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
+    link = g.append("g")
+    .attr("stroke", "#000")
+    .attr("stroke-width", 1.5)
+    .selectAll(".link"),
+    node = g.append("g")
+    .attr("stroke", "#fff")
+    .attr("stroke-width", 1.5)
+    .selectAll(".node");
 
 function restart() {
 
-  // Apply the general update pattern to the nodes.
-  node = node.data(nodes, function(d) { return d.id;});
-  node.exit().remove();
-  node = node.enter()
-          .append("circle")
-          .attr("fill", function(d) { return 'black'; })
-          .attr("r", 4)
-          .merge(node);
+    console.log(`There are ${nodes.length} nodes and ${links.length} links.`);
 
-  // Apply the general update pattern to the links.
-  link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
-  link.exit().remove();
-  link = link.enter().append("line").merge(link);
+    // Apply the general update pattern to the nodes.
+    node = node.data(nodes, function(d) { return d.id; });
+    node.exit()
+        .remove();
+    node = node.enter()
+        .append("circle")
+        .attr("fill", function(d) { return 'black'; })
+        .attr("r", 4)
+        .merge(node);
 
-  // Update and restart the simulation.
-  simulation.nodes(nodes);
-  simulation.force("link").links(links);
-  simulation.alpha(1).restart();
+    // Apply the general update pattern to the links.
+    link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
+    link.exit()
+        .remove();
+    link = link.enter()
+        .append("line")
+        .merge(link);
+
+    // Update and restart the simulation.
+    simulation.nodes(nodes);
+    simulation.force("link")
+        .links(links);
+    simulation.alpha(1)
+        .restart();
 }
 
 function ticked() {
-  node.attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
 
-  link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    d3.select('.decay-bar').style('width', simulation.alpha()*100 + '%')
 }
+
+//add zoom capabilities 
+var zoom_handler = d3.zoom()
+    .on("zoom", zoom_actions);
+
+//Zoom functions 
+function zoom_actions(){
+    g.attr("transform", d3.event.transform)
+}
+
+zoom_handler(svg);   
+
+
+// Sliders
+
+var slider1 = d3.sliderHorizontal()
+    .min(-100)
+    .max(100)
+    .width(300)
+    // .tickFormat(d3.format('.2%'))
+    .step(1)
+    .ticks(5)
+    .default(-30)
+    .on('onchange', val => {
+        d3.select("p#value1")
+            .text(val);
+        simulation.force("charge", d3.forceManyBody()
+            .strength(val))
+
+        restart();
+    });
+
+var gSlider1 = d3.select("div#slider1")
+    .append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+gSlider1.call(slider1);
+
+d3.select("p#value1")
+    .text((slider1.value()))
+d3.select("#resetValue1")
+    .on("click", () => slider1.value(-30));
+
+
+var slider2 = d3.sliderHorizontal()
+    .min(0)
+    .max(2)
+    .width(300)
+    // .tickFormat(d3.format('.2%'))
+    .ticks(5)
+    .default(1)
+    .on('onchange', val => {
+        d3.select("p#value2")
+            .text(val);
+        simulation.force("link", d3.forceLink(links).strength(val))
+
+        restart();
+    });
+
+var gSlider2 = d3.select("div#slider2")
+    .append("svg")
+    .attr("width", 500)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+gSlider2.call(slider2);
+
+d3.select("p#value2")
+    .text((slider2.value()))
+d3.select("#resetValue2")
+    .on("click", () => slider2.value(0));

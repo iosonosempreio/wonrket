@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css">
 
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     </head>
 
     <body>
@@ -20,20 +22,50 @@
                         <h1>Wonrket</h1>
                         <h4>Explorer for force-layouts</h4>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-5 mb-3">
                         <div class="drop_zone nodes">Drop nodes table here</div>
-                        
+
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-5 mb-3">
                         <div class="drop_zone edges">Drop edges table here</div>
-                        
+
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <span class="restart-force">restart simulation</span>
                     </div>
                 </div>
             </div>
             <div class="row">
-              <div class="col">
-                <svg id="force-layout"></svg>
-              </div>
+                <div class="col" style="position: relative;">
+                    <svg id="force-layout"></svg>
+                    <span class="decay"><span class="decay-bar"></span></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h6>forceManyBody</h6>
+                        <p id="resetValue1" href="#">Reset</p>
+                    </div>
+                    <div class="col-md-2">
+                        <p id="value1"></p>
+                    </div>
+                    <div class="col-md">
+                        <div id="slider1"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h6>forceLink</h6>
+                        <p id="resetValue2" href="#">Reset</p>
+                    </div>
+                    <div class="col-md-2">
+                        <p id="value2"></p>
+                    </div>
+                    <div class="col-md">
+                        <div id="slider2"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -44,6 +76,8 @@
         <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
         <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="/node_modules/d3/dist/d3.min.js"></script>
+        <script src="https://unpkg.com/d3-simple-slider@0.2.0/build/d3-simple-slider.js"></script>
+        <script src="/node_modules/lodash/lodash.min.js"></script>
         <script src="script.js"></script>
     </body>
 
