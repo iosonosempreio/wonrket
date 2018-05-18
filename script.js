@@ -96,12 +96,12 @@ function loaded(evt) {
             })
     } else if (table == 'edges') {
         links = fileString;
-        let maxWeight = d3.max(links, function(d){return d.value})
-        links = links.map(function(d){
+        let maxWeight = d3.max(links, function(d) { return d.value })
+        links = links.map(function(d) {
             return {
                 source: d.source,
                 target: d.target,
-                weight: d.value/maxWeight
+                weight: d.value / maxWeight
             }
         })
         console.log(links);
@@ -177,29 +177,64 @@ d3.select('.restart-force')
 
 let g = svg.append("g")
 // .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-link = g.append("g")
+
+let defs = svg.append('defs');
+let link = g.append("g")
     .attr("stroke", "#000")
     .attr("stroke-width", 1.5)
-    .selectAll(".link"),
-    node = g.append("g")
-    .attr("stroke", "#fff")
-    .attr("stroke-width", 1.5)
+    .selectAll(".link");
+
+let node = g.append("g")
+    // .attr("stroke", "#fff")
+    // .attr("stroke-width", 1.5)
     .selectAll(".node");
+
+
 
 function restart() {
 
     console.log(`There are ${nodes.length} nodes and ${links.length} links.`);
 
     d3.select('body').classed('network-loaded', true);
+    console.log(nodes);
+    console.log(_.includes(nodes.columns, 'imageUrl'))
 
     // Apply the general update pattern to the nodes.
     node = node.data(nodes, function(d) { return d.id; });
     node.exit()
         .remove();
+
+    // <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="1" width="1">
+    //   <image x="0" y="0" xlink:href="url.png"></image>
+    // </pattern>
+
+    let nodesRadius = 4;
+
     node = node.enter()
         .append("circle")
-        .attr("fill", function(d) { return 'tomato'; })
-        .attr("r", 4)
+        .attr("fill", function(d) {
+            if (d.imageUrl) {
+                d3.select('defs')
+                    .append('pattern')
+                    .attr('id',`image-${d.id}`)
+                    .attr('x',0)
+                    .attr('y',0)
+                    .attr('width',nodesRadius*2)
+                    .attr('height',nodesRadius*2)
+                    .attr('patternUnits','objectBoundingBox')
+                    .append('image')
+                        .attr('x',0)
+                        .attr('y',0)
+                        .attr('width',nodesRadius*2)
+                        .attr('height',nodesRadius*2)
+                        .attr('xlink:href', d.imageUrl);
+                return `url(#image-${d.id})`;        
+                return 'MEDIUMSPRINGGREEN';
+            } else {
+                return 'tomato';
+            }
+        })
+        .attr("r", nodesRadius)
         .merge(node);
 
     // Apply the general update pattern to the links.
@@ -256,8 +291,8 @@ zoom_handler(svg);
 // Sliders
 
 var slider1 = d3.sliderHorizontal()
-    .min(-100)
-    .max(100)
+    .min(-1000)
+    .max(1000)
     .width(250)
     // .tickFormat(d3.format('.2%'))
     .step(1)
